@@ -1,3 +1,5 @@
+const toForm = ["1", "2", "3", "4", "5"];
+
 describe("the initial page", () => {
   //Visits page before each test
   beforeEach(() => {
@@ -5,25 +7,14 @@ describe("the initial page", () => {
   });
 
   //Visits respective pages when buttons are clicked
-  //TODO - combine into one test
-  it("should redirect to the form page 1", () => {
-    cy.get('a[href*="1"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/cycle/1");
-  });
-  it("should redirect to the form page 2", () => {
-    cy.get('a[href*="2"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/cycle/2");
-  });
-  it("should redirect to the form page 1", () => {
-    cy.get('a[href*="3"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/cycle/3");
-  });
-  it("should redirect to the form page 1", () => {
-    cy.get('a[href*="4"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/cycle/4");
-  });
-  it("should redirect to the form page 1", () => {
-    cy.get('a[href*="5"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/cycle/5");
+  it("should redirect to the form pages", () => {
+    for (let i = 0; i < toForm.length; i++) {
+      cy.visit("https://cycle.dia-sandbox.govt.nz/");
+      cy.get(`a[href*=${toForm[i]}]`).click();
+      cy.url().should(
+        "eq",
+        `https://cycle.dia-sandbox.govt.nz/cycle/${toForm[i]}`
+      );
+    }
   });
 });
