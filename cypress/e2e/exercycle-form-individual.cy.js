@@ -9,8 +9,7 @@ const textInput = [
   "individual-1-7",
 ];
 
-describe("the one person form page", () => {
-  //Visits page before each test
+describe("General tests", () => {
   beforeEach(() => {
     cy.visit("https://cycle.dia-sandbox.govt.nz/cycle/1");
   });
@@ -21,25 +20,11 @@ describe("the one person form page", () => {
     //Should also display 0 household points as nothing was entered
     cy.contains("Total Household points: 0");
   });
+});
 
-  it("should display the same number when one daily value is inputted", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("1");
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
-    cy.contains("Total Household points: 1");
-  });
-
-  it("should display the same number when one multiple values are inputted", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("1");
-    cy.get(`input[id=${textInput[1]}]`).clear().type("3");
-    cy.get(`input[id=${textInput[2]}]`).clear().type("2");
-    cy.get(`input[id=${textInput[3]}]`).clear().type("5");
-    cy.get(`input[id=${textInput[4]}]`).clear().type("2");
-    cy.get(`input[id=${textInput[5]}]`).clear().type("3");
-    cy.get(`input[id=${textInput[6]}]`).clear().type("1");
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
-    cy.contains("Total Household points: 17");
+describe("Input tests", () => {
+  beforeEach(() => {
+    cy.visit("https://cycle.dia-sandbox.govt.nz/cycle/1");
   });
 
   it("should not accept a daily value greater than 7", () => {
@@ -49,19 +34,10 @@ describe("the one person form page", () => {
     cy.get(".pb-6").should("not.have.text", "Total Household Points");
   });
 
-  it("should not have more than 30 weekly points when total daily points > 30", () => {
-    //Total daily points = 35
-    for (let i = 0; i < textInput.length; i++) {
-      cy.get(`input[id=${textInput[i]}]`).clear().type("7");
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
-    cy.contains("Total Household points: 30");
-  });
-
   it("should not allow negative points", () => {
     cy.get(`input[id=${textInput[0]}]`).clear().type("-1");
     cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.get(".pb-6").should("not.contain", "Total Household points: -1");
   });
 
@@ -70,5 +46,54 @@ describe("the one person form page", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("not.contain", "calculate");
     cy.get(".pb-6").should("not.contain", "Total Household points: 1.1");
+  });
+
+  it("should display 0 in the table when all inputs are empty", () => {
+    for (let i = 0; i < textInput.length; i++) {
+      cy.get(`input[id=${textInput[i]}]`).clear();
+    }
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.get(".px-4").contains("0");
+  });
+
+  it("should not allow numbers in scientific format", () => {
+    cy.get(`input[id=${textInput[0]}]`).clear().type("-1e+24");
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.get(".pb-6").should("not.contain", "+24", { matchCase: false });
+  });
+});
+
+describe("Calculation tests", () => {
+  //Visits page before each test
+  beforeEach(() => {
+    cy.visit("https://cycle.dia-sandbox.govt.nz/cycle/1");
+  });
+
+  it("should not have more than 30 weekly points when total daily points > 30", () => {
+    //Total daily points = 42
+    for (let i = 0; i < textInput.length; i++) {
+      cy.get(`input[id=${textInput[i]}]`).clear().type("7");
+    }
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 30");
+  });
+
+  it("should display the same number when one daily value is inputted", () => {
+    cy.get(`input[id=${textInput[0]}]`).clear().type("1");
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 1");
+  });
+
+  it("should display the same number when one multiple values are inputted", () => {
+    for (let i = 0; i < textInput.length; i++) {
+      cy.get(`input[id=${textInput[i]}]`).clear().type(i);
+    }
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 28");
   });
 });
