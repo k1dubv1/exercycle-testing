@@ -89,7 +89,9 @@ describe("Calculation tests", () => {
 
   it("should display the same number when one multiple values are inputted", () => {
     for (let i = 0; i < textInput.length; i++) {
-      cy.get(`input[id=${textInput[i]}]`).clear().type(i);
+      cy.get(`input[id=${textInput[i]}]`)
+        .clear()
+        .type(i + 1);
     }
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
