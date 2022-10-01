@@ -60,6 +60,7 @@ describe("Input tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.get(".px-4").contains("0");
+    cy.contains("Total Household points: 0");
   });
 
   it("should not allow numbers in scientific format", () => {
