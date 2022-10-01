@@ -112,4 +112,17 @@ describe("Calculation tests", () => {
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.contains("Total Household points: 30");
   });
+
+  it("should calculate correctly when there are empty fields", () => {
+    for (let i = 0; i < textInput_1.length; i++) {
+      cy.get(`input[id=${textInput_1[i]}]`)
+        .clear()
+        .type(i + 1);
+    }
+    cy.get(`input[id=${textInput_1[0]}]`).clear();
+    cy.get(`input[id=${textInput_1[6]}]`).clear();
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 20");
+  });
 });

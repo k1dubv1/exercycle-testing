@@ -10,23 +10,39 @@ import {
 // TODO - reduce duplication for all tests
 
 /*  These tests are extensions of the input tests in exercycle-form-individual.
-    Only non-invalid and assumed-valid inputs are tested (as invalid inputs should still not be allowed)
+    Only non-invalid and assumed-valid inputs are tested (as invalid inputs should not be allowed: see exercycle-form-individual)
+    Input tests should be the same for all forms.
 */
-describe("2 people input tests", () => {
+describe("Input tests", () => {
   beforeEach(() => {
     cy.visit("https://cycle.dia-sandbox.govt.nz/cycle/2");
   });
+  // removes text for one individual all
+  it("should calculate correctly when one individual has empty input fields", () => {
+    for (let i = 0; i < textInput_1.length; i++) {
+      cy.get(`input[id=${textInput_1[i]}]`).clear(); // total = 0
+      cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
+      // therefore total household points should be 21 (0 + 21)
+    }
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 21");
+    cy.contains(".mb-4", individuals[0]).should("contain", "0");
+    cy.contains(".mb-4", individuals[1]).should("contain", "21");
+  });
 
-  /*for (let i = 0; i < textInput_1.length; i++) {
-    cy.get(`input[id=${textInput_1[i]}]`).clear().type(i); // total = 21
-    cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
-    // therefore total household points should be 42 (21 + 21)
-  }
-  cy.get('input[type="submit"]').click();
-  cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
-  cy.contains("Total Household points: 42");
-  cy.contains(".mb-4", individuals[0]).should("contain", "21");
-  cy.contains(".mb-4", individuals[1]).should("contain", "21");*/
+  it("should calculate correctly when one individual has leading 0s", () => {
+    for (let i = 0; i < textInput_1.length; i++) {
+      cy.get(`input[id=${textInput_1[i]}]`).clear().type(i); // total = 21
+      cy.get(`input[id=${textInput_2[i]}]`).clear().type("000000000001"); // total = 7
+      // therefore total household points should be 28 (21 + 7)
+    }
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 28");
+    cy.contains(".mb-4", individuals[0]).should("contain", "21");
+    cy.contains(".mb-4", individuals[1]).should("contain", "7");
+  });
 });
 
 /*  These tests check that the calculation works for 2 members.
