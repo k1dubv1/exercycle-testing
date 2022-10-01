@@ -1,7 +1,5 @@
 import { textInputs, formSites, calculateSite } from "../support/consts";
 const singleInput = textInputs[0];
-const largeNegative = "-999999999999999999999"; //Turned into a string as too big for int
-const largeNegativeScientific = "-1.0E+21";
 describe("General tests", () => {
   beforeEach(() => {
     cy.visit(formSites[0]);
@@ -10,7 +8,7 @@ describe("General tests", () => {
   it("should redirect to the calculate page when submit button is clicked", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
-    //Should also display 0 household points as nothing was entered
+    // Should also display 0 household points as nothing was entered
     cy.contains("Total Household points: 0");
   });
 });
@@ -21,7 +19,7 @@ describe("General tests", () => {
  */
 
 describe("Calculation tests", () => {
-  //Visits page before each test
+  // Visits page before each test
   beforeEach(() => {
     cy.visit(formSites[0]);
   });

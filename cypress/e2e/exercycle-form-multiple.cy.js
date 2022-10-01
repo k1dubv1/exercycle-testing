@@ -9,7 +9,6 @@ import {
  *  These tests check that the point calculation is correct for households with multiple members (2 - 5 members)
  *  All member numbers test for the same calculation requirements.
  */
-
 for (let members = 2; members <= 5; members++) {
   describe(`${members} member calculation tests`, () => {
     beforeEach(() => {
@@ -19,21 +18,18 @@ for (let members = 2; members <= 5; members++) {
     it("should redirect to the calculate page when submit button is clicked", () => {
       cy.get('input[type="submit"]').click();
       cy.url().should("eq", calculateSite);
-
-      //Should also display 0 household points as nothing was entered
+      // Should also display 0 household points as nothing was entered
       cy.contains("Total Household points: 0");
-
-      //Checks that table has the correct number of rows.
+      // Checks that table has the correct number of rows.
       cy.get("table").find("tr").should("have.length", members);
     });
 
     it("should calculate the correct number of household points with individual values < 30", () => {
       for (let m = 0; m < members; m++) {
         textInputs[m].forEach((memberDay) => {
-          cy.get(`input[id=${memberDay}]`).clear().type(2); // total = 14
+          cy.get(`input[id=${memberDay}]`).clear().type(2); // Total = 14
         });
       }
-
       /*
        *    Therefore total household points should = number of members * 14
        *    eg. 3 members -> 42 points
@@ -48,9 +44,8 @@ for (let members = 2; members <= 5; members++) {
 
     it("should calculate the correct number of household points with individual values << 30", () => {
       for (let m = 0; m < members; m++) {
-        cy.get(`input[id=${textInputs[m][0]}]`).clear().type(1); // total = 1
+        cy.get(`input[id=${textInputs[m][0]}]`).clear().type(1); // Total = 1
       }
-
       /*
        *    Therefore total household points should = number of members
        *    eg. 5 members -> 5 points
@@ -67,13 +62,12 @@ for (let members = 2; members <= 5; members++) {
       for (let m = 0; m < members; m++) {
         textInputs[m].forEach((memberDay) => {
           if (m == members - 1) {
-            cy.get(`input[id=${memberDay}]`).clear().type(5); // total = 35, but only 30 household points awarded
+            cy.get(`input[id=${memberDay}]`).clear().type(5); // Total = 35, but only 30 household points awarded
           } else {
-            cy.get(`input[id=${memberDay}]`).clear().type(2); // total = 14
+            cy.get(`input[id=${memberDay}]`).clear().type(2); // Total = 14
           }
         });
       }
-
       /*
        *    Therefore total household points should = (number of members - 1) * 14 + 30
        *                                            = number of members * 14 + 16
@@ -95,7 +89,7 @@ for (let members = 2; members <= 5; members++) {
     it("should calculate the correct number of household points with maximum individual points", () => {
       for (let m = 0; m < members; m++) {
         for (let i = 0; i < 6; i++) {
-          cy.get(`input[id=${textInputs[m][i]}]`).clear().type(5); // total = 30
+          cy.get(`input[id=${textInputs[m][i]}]`).clear().type(5); // Total = 30
         }
       }
       /*
