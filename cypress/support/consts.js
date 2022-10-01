@@ -6,6 +6,8 @@ const individuals = [
   "Individual 5",
 ];
 
+//make textInputs rely on individual/day rather than whole values??
+
 const textInput_1 = [
   "individual-1-1",
   "individual-1-2",
@@ -52,6 +54,14 @@ const textInput_5 = [
   "individual-5-6",
   "individual-5-7",
 ];
+const formSites = [
+  "https://cycle.dia-sandbox.govt.nz/cycle/1",
+  "https://cycle.dia-sandbox.govt.nz/cycle/2",
+  "https://cycle.dia-sandbox.govt.nz/cycle/3",
+  "https://cycle.dia-sandbox.govt.nz/cycle/4",
+  "https://cycle.dia-sandbox.govt.nz/cycle/5",
+];
+const calculateSite = "https://cycle.dia-sandbox.govt.nz/calculate";
 
 const toForm = ["1", "2", "3", "4", "5"];
 
@@ -63,4 +73,6 @@ export {
   textInput_4,
   textInput_5,
   toForm,
+  formSites,
+  calculateSite,
 };
