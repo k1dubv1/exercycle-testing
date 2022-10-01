@@ -1,10 +1,6 @@
 import {
   individuals,
-  textInput_1,
-  textInput_2,
-  textInput_3,
-  textInput_4,
-  textInput_5,
+  textInputs,
   formSites,
   calculateSite,
 } from "../support/consts";
@@ -22,9 +18,9 @@ describe("Input tests", () => {
   });
   // removes text for one individual all
   it("should calculate correctly when one individual has empty input fields", () => {
-    for (let i = 0; i < textInput_1.length; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear(); // total = 0
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
+    for (let i = 0; i < textInputs[0].length; i++) {
+      cy.get(`input[id=${textInputs[0][i]}]`).clear(); // total = 0
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
       // therefore total household points should be 21 (0 + 21)
     }
     cy.get('input[type="submit"]').click();
@@ -35,9 +31,9 @@ describe("Input tests", () => {
   });
 
   it("should calculate correctly when one individual has leading 0s", () => {
-    for (let i = 0; i < textInput_1.length; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type("000000000001"); // total = 7
+    for (let i = 0; i < textInputs[0].length; i++) {
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(i); // total = 21
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type("000000000001"); // total = 7
       // therefore total household points should be 28 (21 + 7)
     }
     cy.get('input[type="submit"]').click();
@@ -67,9 +63,9 @@ describe("2 people calculation tests", () => {
   });
 
   it("should calculate the correct number of household points with individual values < 30", () => {
-    for (let i = 0; i < textInput_1.length; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
+    for (let i = 0; i < textInputs[0].length; i++) {
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(i); // total = 21
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
       // therefore total household points should be 42 (21 + 21)
     }
     cy.get('input[type="submit"]').click();
@@ -80,8 +76,8 @@ describe("2 people calculation tests", () => {
   });
 
   it("should calculate the correct number of household points with individual values << 30", () => {
-    cy.get(`input[id=${textInput_1[0]}]`).clear().type(1); // total = 1
-    cy.get(`input[id=${textInput_2[0]}]`).clear().type(1); // total = 1
+    cy.get(`input[id=${textInputs[0][0]}]`).clear().type(1); // total = 1
+    cy.get(`input[id=${textInputs[1][0]}]`).clear().type(1); // total = 1
     // therefore total household points should be 2 (1 + 1)
 
     cy.get('input[type="submit"]').click();
@@ -92,9 +88,9 @@ describe("2 people calculation tests", () => {
   });
 
   it("should calculate the correct number of household points with individual values > 30", () => {
-    for (let i = 0; i < textInput_1.length; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(5); // total = 35, but only 30 household points awarded
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
+    for (let i = 0; i < textInputs[0].length; i++) {
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 35, but only 30 household points awarded
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
       // therefore total household points should be 51 (30 + 21)
     }
     cy.get('input[type="submit"]').click();
@@ -106,8 +102,8 @@ describe("2 people calculation tests", () => {
 
   it("should calculate the correct number of household points with maximum individual points", () => {
     for (let i = 0; i < 6; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(5); // total = 30
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(5); // total = 30
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 30
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(5); // total = 30
       // therefore total household points should be 60 (30 + 30)
     }
     cy.get('input[type="submit"]').click();
@@ -137,10 +133,10 @@ describe("3 people calculation tests", () => {
   });
 
   it("should calculate the correct number of household points with individual values < 30", () => {
-    for (let i = 0; i < textInput_1.length; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInput_3[i]}]`).clear().type(i); // total = 21
+    for (let i = 0; i < textInputs[0].length; i++) {
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(i); // total = 21
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
+      cy.get(`input[id=${textInputs[2][i]}]`).clear().type(i); // total = 21
       // therefore total household points should be 63
     }
     cy.get('input[type="submit"]').click();
@@ -152,9 +148,9 @@ describe("3 people calculation tests", () => {
   });
 
   it("should calculate the correct number of household points with individual values << 30", () => {
-    cy.get(`input[id=${textInput_1[0]}]`).clear().type(1); // total = 1
-    cy.get(`input[id=${textInput_2[0]}]`).clear().type(1); // total = 1
-    cy.get(`input[id=${textInput_3[0]}]`).clear().type(1); // total = 1
+    cy.get(`input[id=${textInputs[0][0]}]`).clear().type(1); // total = 1
+    cy.get(`input[id=${textInputs[1][0]}]`).clear().type(1); // total = 1
+    cy.get(`input[id=${textInputs[2][0]}]`).clear().type(1); // total = 1
     // therefore total household points should be 3
 
     cy.get('input[type="submit"]').click();
@@ -166,10 +162,10 @@ describe("3 people calculation tests", () => {
   });
 
   it("should calculate the correct number of household points with individual values > 30", () => {
-    for (let i = 0; i < textInput_1.length; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(5); // total = 35, but only 30 household points awarded
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInput_3[i]}]`).clear().type(1); // total = 7
+    for (let i = 0; i < textInputs[0].length; i++) {
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 35, but only 30 household points awarded
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
+      cy.get(`input[id=${textInputs[2][i]}]`).clear().type(1); // total = 7
       // therefore total household points should be 58
     }
     cy.get('input[type="submit"]').click();
@@ -182,9 +178,9 @@ describe("3 people calculation tests", () => {
 
   it("should calculate the correct number of household points with maximum individual points", () => {
     for (let i = 0; i < 6; i++) {
-      cy.get(`input[id=${textInput_1[i]}]`).clear().type(5); // total = 30
-      cy.get(`input[id=${textInput_2[i]}]`).clear().type(5); // total = 30
-      cy.get(`input[id=${textInput_3[i]}]`).clear().type(5); // total = 30
+      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 30
+      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(5); // total = 30
+      cy.get(`input[id=${textInputs[2][i]}]`).clear().type(5); // total = 30
       // therefore total household points should be 90
     }
     cy.get('input[type="submit"]').click();
