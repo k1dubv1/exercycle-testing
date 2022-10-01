@@ -5,8 +5,6 @@ import {
   calculateSite,
 } from "../support/consts";
 
-// TODO - reduce duplication for all tests
-
 /*
  *  These tests are extensions of the input tests in exercycle-form-individual.
  *  Only non-invalid and assumed-valid inputs are tested (as invalid inputs should not be allowed: see exercycle-form-individual)
@@ -43,6 +41,11 @@ describe("Input tests", () => {
     cy.contains(".mb-4", individuals[1]).should("contain", "7");
   });
 });
+
+/*
+ *  These tests check that the point calculation is correct for households with multiple members (2 - 5 members)
+ *  All member numbers have the same tests.
+ */
 
 for (let members = 2; members <= 5; members++) {
   describe(`${members} people calculation tests`, () => {
@@ -103,10 +106,9 @@ for (let members = 2; members <= 5; members++) {
       }
 
       /*
-       *    therefore total household points should
-       *    = (number of members - 1) * 14 + 30
-       *    = number of members * 14 + 16
-       *    (simplified for readability purposes)
+       *    therefore total household points should = (number of members - 1) * 14 + 30
+       *                                            = number of members * 14 + 16
+       *                                            (simplified for readability purposes)
        */
       cy.get('input[type="submit"]').click();
       cy.url().should("eq", calculateSite);
