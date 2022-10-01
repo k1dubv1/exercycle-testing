@@ -1,4 +1,4 @@
-# exercycle-testing
+# Exercycle Cypress Tests
 
 ## Description
 
@@ -10,13 +10,15 @@ This application records each household member's daily exercycle points for a gi
 
 All test files can be found under [cypress/e2e](cypress/e2e).
 
-* exercycle-home.cy.js: Contains tests for the [initial/home page](https://cycle.dia-sandbox.govt.nz/). 
-* exercycle-form-individual.cy.js: Contains tests for only the [one person form](https://cycle.dia-sandbox.govt.nz/cycle/1).
-* exercycle-form-multiple.cy.js: Contains tests for forms with multiple family members:
-  * [2 members](https://cycle.dia-sandbox.govt.nz/cycle/2)
-  * [3 members](https://cycle.dia-sandbox.govt.nz/cycle/3)
-  * [4 members](https://cycle.dia-sandbox.govt.nz/cycle/4)
-  * [5 members](https://cycle.dia-sandbox.govt.nz/cycle/5)
+* [exercycle-home.cy.js](./cypress/e2e/exercycle-home.cy.js): Contains tests for the [initial/home page](https://cycle.dia-sandbox.govt.nz/). 
+* [exercycle-form-input.js](./cypress/e2e/exercycle-form-input.cy.js): Contains tests regarding the input of data for all forms. 
+* [exercycle-form-individual.cy.js](./cypress/e2e/exercycle-form-individual.cy.js): Contains tests regarding the points calculation for one person.
+* [exercycle-form-multiple.cy.js](./cypress/e2e/exercycle-form-multiple.cy.js): Contains tests regarding the points calculation for multiple household members (2-5+).
+
+## Other relevant files
+
+* [consts.js](./cypress/support/consts.js): Constants used in test files.
+
 
 ## Other information
 
