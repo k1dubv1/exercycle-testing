@@ -22,6 +22,11 @@ describe("General tests", () => {
   });
 });
 
+/*  These tests check that the app allows/does not allow different types of input.
+    Checks both valid and invalid inputs.
+    As inputs can affect the final calculation, they need to be tested as they are possible causes of incorrect calculations.
+*/
+
 describe("Input tests", () => {
   beforeEach(() => {
     cy.visit("https://cycle.dia-sandbox.govt.nz/cycle/1");
@@ -65,20 +70,14 @@ describe("Input tests", () => {
   });
 });
 
+/*  These tests check that calculation itself is working as intended. 
+    All inputs should be valid and follow the scheme rules.
+*/
+
 describe("Calculation tests", () => {
   //Visits page before each test
   beforeEach(() => {
     cy.visit("https://cycle.dia-sandbox.govt.nz/cycle/1");
-  });
-
-  it("should not have more than 30 weekly points when total daily points > 30", () => {
-    //Total daily points = 42
-    for (let i = 0; i < textInput.length; i++) {
-      cy.get(`input[id=${textInput[i]}]`).clear().type("7");
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
-    cy.contains("Total Household points: 30");
   });
 
   it("should display the same number when one daily value is inputted", () => {
@@ -95,5 +94,19 @@ describe("Calculation tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.contains("Total Household points: 28");
+  });
+
+  /*  Individual points = 49
+      This is over the maximum number of points that an individual can earn for their household (30).
+      The individual should be able to earn all of these points (as per the daily limit).
+      However, only 30 points shall be awarded per week per individual, excess points will not contribute to the household total.
+  */
+  it("should not have more than 30 weekly points when total daily points > 30", () => {
+    for (let i = 0; i < textInput.length; i++) {
+      cy.get(`input[id=${textInput[i]}]`).clear().type("7");
+    }
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 30");
   });
 });
