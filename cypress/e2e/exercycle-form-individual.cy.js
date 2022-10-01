@@ -1,5 +1,7 @@
 import { textInputs, formSites, calculateSite } from "../support/consts";
 const singleInput = textInputs[0];
+const largeNegative = "-999999999999999999999"; //Turned into a string as too big for int
+const largeNegativeScientific = "-1.0E+21";
 describe("General tests", () => {
   beforeEach(() => {
     cy.visit(formSites[0]);
@@ -36,6 +38,16 @@ describe("Input tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
     cy.get(".pb-6").should("not.contain", "Total Household points: -1");
+  });
+
+  it("should not allow large negative points", () => {
+    cy.get(`input[id=${singleInput[0]}]`).clear().type(largeNegative);
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", calculateSite);
+    cy.get(".pb-6").should(
+      "not.contain",
+      "Total Household points: " + largeNegativeScientific // number is too large so it turns into scientific form
+    );
   });
 
   it("should only allow whole numbers", () => {
