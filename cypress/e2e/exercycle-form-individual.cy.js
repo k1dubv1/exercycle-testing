@@ -1,13 +1,4 @@
-//id of each input box
-const textInput = [
-  "individual-1-1",
-  "individual-1-2",
-  "individual-1-3",
-  "individual-1-4",
-  "individual-1-5",
-  "individual-1-6",
-  "individual-1-7",
-];
+import { textInput_1 } from "../support/consts";
 
 describe("General tests", () => {
   beforeEach(() => {
@@ -22,6 +13,8 @@ describe("General tests", () => {
   });
 });
 
+// TODO - reduce duplication (for all tests)
+
 /*  These tests check that the app allows/does not allow different types of input.
     Checks both valid and invalid inputs.
     As inputs can affect the final calculation, they need to be tested as they are possible causes of incorrect calculations.
@@ -33,29 +26,29 @@ describe("Input tests", () => {
   });
 
   it("should not accept a daily value greater than 7", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("8");
+    cy.get(`input[id=${textInput_1[0]}]`).clear().type("8");
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
-    cy.get(".pb-6").should("not.have.text", "Total Household Points");
+    cy.get(".pb-6").should("not.have.text", "Total Household points");
   });
 
   it("should not allow negative points", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("-1");
+    cy.get(`input[id=${textInput_1[0]}]`).clear().type("-1");
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.get(".pb-6").should("not.contain", "Total Household points: -1");
   });
 
   it("should not allow decimals", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("1.1");
+    cy.get(`input[id=${textInput_1[0]}]`).clear().type("1.1");
     cy.get('input[type="submit"]').click();
     cy.url().should("not.contain", "calculate");
     cy.get(".pb-6").should("not.contain", "Total Household points: 1.1");
   });
 
   it("should display 0 in the table when all inputs are empty", () => {
-    for (let i = 0; i < textInput.length; i++) {
-      cy.get(`input[id=${textInput[i]}]`).clear();
+    for (let i = 0; i < textInput_1.length; i++) {
+      cy.get(`input[id=${textInput_1[i]}]`).clear();
     }
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
@@ -64,10 +57,17 @@ describe("Input tests", () => {
   });
 
   it("should not allow numbers in scientific format", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("-1e+24");
+    cy.get(`input[id=${textInput_1[0]}]`).clear().type("-1e+24");
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.get(".pb-6").should("not.contain", "+24", { matchCase: false });
+  });
+
+  it("should allow leading 0s", () => {
+    cy.get(`input[id=${textInput_1[0]}]`).clear().type("00000001");
+    cy.get('input[type="submit"]').click();
+    cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
+    cy.contains("Total Household points: 1");
   });
 });
 
@@ -82,15 +82,15 @@ describe("Calculation tests", () => {
   });
 
   it("should display the same number when one daily value is inputted", () => {
-    cy.get(`input[id=${textInput[0]}]`).clear().type("1");
+    cy.get(`input[id=${textInput_1[0]}]`).clear().type("1");
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");
     cy.contains("Total Household points: 1");
   });
 
   it("should display the same number when one multiple values are inputted", () => {
-    for (let i = 0; i < textInput.length; i++) {
-      cy.get(`input[id=${textInput[i]}]`)
+    for (let i = 0; i < textInput_1.length; i++) {
+      cy.get(`input[id=${textInput_1[i]}]`)
         .clear()
         .type(i + 1);
     }
@@ -105,8 +105,8 @@ describe("Calculation tests", () => {
       However, only 30 points shall be awarded per week per individual, excess points will not contribute to the household total.
   */
   it("should not have more than 30 weekly points when total daily points > 30", () => {
-    for (let i = 0; i < textInput.length; i++) {
-      cy.get(`input[id=${textInput[i]}]`).clear().type("7");
+    for (let i = 0; i < textInput_1.length; i++) {
+      cy.get(`input[id=${textInput_1[i]}]`).clear().type("7");
     }
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", "https://cycle.dia-sandbox.govt.nz/calculate");

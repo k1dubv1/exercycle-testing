@@ -1,4 +1,4 @@
-const toForm = ["1", "2", "3", "4", "5"];
+import { toForm } from "../support/consts";
 
 describe("the initial page", () => {
   //Visits page before each test
