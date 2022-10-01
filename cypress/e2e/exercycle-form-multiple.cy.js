@@ -44,150 +44,95 @@ describe("Input tests", () => {
   });
 });
 
-/*
- *   These tests check that the calculation works for 2 members.
- *   Only valid inputs are checked as invalid inputs are checked in other test suites/files.
- */
-describe("2 people calculation tests", () => {
-  beforeEach(() => {
-    cy.visit(formSites[1]);
+for (let members = 2; members <= 5; members++) {
+  describe(`${members} people calculation tests`, () => {
+    beforeEach(() => {
+      cy.visit(formSites[members - 1]);
+    });
+
+    it("should redirect to the calculate page when submit button is clicked", () => {
+      cy.get('input[type="submit"]').click();
+      cy.url().should("eq", calculateSite);
+
+      //Should also display 0 household points as nothing was entered
+      cy.contains("Total Household points: 0");
+
+      //Checks that table has the correct number of rows.
+      cy.get("table").find("tr").should("have.length", members);
+    });
+
+    it("should calculate the correct number of household points with individual values < 30", () => {
+      for (let m = 0; m < members; m++) {
+        textInputs[m].forEach((memberDay) => {
+          cy.get(`input[id=${memberDay}]`).clear().type(2); // total = 14
+        });
+      }
+
+      // therefore total household points should = number of members * 14
+      cy.get('input[type="submit"]').click();
+      cy.url().should("eq", calculateSite);
+      cy.contains("Total Household points: " + members * 14);
+      for (let n = 0; n < members; n++) {
+        cy.contains(".mb-4", individuals[n]).should("contain", "14");
+      }
+    });
+
+    it("should calculate the correct number of household points with individual values << 30", () => {
+      for (let m = 0; m < members; m++) {
+        cy.get(`input[id=${textInputs[m][0]}]`).clear().type(1); // total = 1
+      }
+
+      // therefore total household points should = number of members
+      cy.get('input[type="submit"]').click();
+      cy.url().should("eq", calculateSite);
+      cy.contains("Total Household points: " + members);
+      for (let n = 0; n < members; n++) {
+        cy.contains(".mb-4", individuals[n]).should("contain", "1");
+      }
+    });
+
+    it("should calculate the correct number of household points with individual values > 30", () => {
+      for (let m = 0; m < members; m++) {
+        textInputs[m].forEach((memberDay) => {
+          if (m == members - 1) {
+            cy.get(`input[id=${memberDay}]`).clear().type(5); // total = 35, but only 30 household points awarded
+          } else {
+            cy.get(`input[id=${memberDay}]`).clear().type(2); // total = 14
+          }
+        });
+      }
+
+      /*
+       *    therefore total household points should
+       *    = (number of members - 1) * 14 + 30
+       *    = number of members * 14 + 16
+       *    (simplified for readability purposes)
+       */
+      cy.get('input[type="submit"]').click();
+      cy.url().should("eq", calculateSite);
+      cy.contains("Total Household points: " + (members * 14 + 16));
+      for (let n = 0; n < members; n++) {
+        if (n == members - 1) {
+          cy.contains(".mb-4", individuals[n]).should("contain", "30");
+        } else {
+          cy.contains(".mb-4", individuals[n]).should("contain", "14");
+        }
+      }
+    });
+
+    it("should calculate the correct number of household points with maximum individual points", () => {
+      for (let m = 0; m < members; m++) {
+        for (let i = 0; i < 6; i++) {
+          cy.get(`input[id=${textInputs[m][i]}]`).clear().type(5); // total = 30
+        }
+      }
+      // therefore total household points should = number of members members * 30
+      cy.get('input[type="submit"]').click();
+      cy.url().should("eq", calculateSite);
+      cy.contains("Total Household points: " + members * 30);
+      for (let n = 0; n < members; n++) {
+        cy.contains(".mb-4", individuals[n]).should("contain", "30");
+      }
+    });
   });
-
-  it("should redirect to the calculate page when submit button is clicked", () => {
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    //Should also display 0 household points as nothing was entered
-    cy.contains("Total Household points: 0");
-    //Checks that table has 2 rows. Should not have any more or less.
-    cy.get("table").find("tr").should("have.length", 2);
-  });
-
-  it("should calculate the correct number of household points with individual values < 30", () => {
-    for (let i = 0; i < textInputs[0].length; i++) {
-      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
-      // therefore total household points should be 42 (21 + 21)
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 42");
-    cy.contains(".mb-4", individuals[0]).should("contain", "21");
-    cy.contains(".mb-4", individuals[1]).should("contain", "21");
-  });
-
-  it("should calculate the correct number of household points with individual values << 30", () => {
-    cy.get(`input[id=${textInputs[0][0]}]`).clear().type(1); // total = 1
-    cy.get(`input[id=${textInputs[1][0]}]`).clear().type(1); // total = 1
-    // therefore total household points should be 2 (1 + 1)
-
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 2");
-    cy.contains(".mb-4", individuals[0]).should("contain", "1");
-    cy.contains(".mb-4", individuals[1]).should("contain", "1");
-  });
-
-  it("should calculate the correct number of household points with individual values > 30", () => {
-    for (let i = 0; i < textInputs[0].length; i++) {
-      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 35, but only 30 household points awarded
-      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
-      // therefore total household points should be 51 (30 + 21)
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 51");
-    cy.contains(".mb-4", individuals[0]).should("contain", "30");
-    cy.contains(".mb-4", individuals[1]).should("contain", "21");
-  });
-
-  it("should calculate the correct number of household points with maximum individual points", () => {
-    for (let i = 0; i < 6; i++) {
-      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 30
-      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(5); // total = 30
-      // therefore total household points should be 60 (30 + 30)
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 60");
-    cy.contains(".mb-4", individuals[0]).should("contain", "30");
-    cy.contains(".mb-4", individuals[1]).should("contain", "30");
-  });
-});
-
-/*
- *   These tests check for correct calculation for 3 members
- *   Tests for the same criteria as the 2 member tests but for 3 members
- */
-describe("3 people calculation tests", () => {
-  beforeEach(() => {
-    cy.visit(formSites[2]);
-  });
-
-  it("should redirect to the calculate page when submit button is clicked", () => {
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    //Should also display 0 household points as nothing was entered
-    cy.contains("Total Household points: 0");
-    //Checks that table has 3 rows. Should not have any more or less.
-    cy.get("table").find("tr").should("have.length", 3);
-  });
-
-  it("should calculate the correct number of household points with individual values < 30", () => {
-    for (let i = 0; i < textInputs[0].length; i++) {
-      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInputs[2][i]}]`).clear().type(i); // total = 21
-      // therefore total household points should be 63
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 63");
-    cy.contains(".mb-4", individuals[0]).should("contain", "21");
-    cy.contains(".mb-4", individuals[1]).should("contain", "21");
-    cy.contains(".mb-4", individuals[2]).should("contain", "21");
-  });
-
-  it("should calculate the correct number of household points with individual values << 30", () => {
-    cy.get(`input[id=${textInputs[0][0]}]`).clear().type(1); // total = 1
-    cy.get(`input[id=${textInputs[1][0]}]`).clear().type(1); // total = 1
-    cy.get(`input[id=${textInputs[2][0]}]`).clear().type(1); // total = 1
-    // therefore total household points should be 3
-
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 3");
-    cy.contains(".mb-4", individuals[0]).should("contain", "1");
-    cy.contains(".mb-4", individuals[1]).should("contain", "1");
-    cy.contains(".mb-4", individuals[2]).should("contain", "1");
-  });
-
-  it("should calculate the correct number of household points with individual values > 30", () => {
-    for (let i = 0; i < textInputs[0].length; i++) {
-      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 35, but only 30 household points awarded
-      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(i); // total = 21
-      cy.get(`input[id=${textInputs[2][i]}]`).clear().type(1); // total = 7
-      // therefore total household points should be 58
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 58");
-    cy.contains(".mb-4", individuals[0]).should("contain", "30");
-    cy.contains(".mb-4", individuals[1]).should("contain", "21");
-    cy.contains(".mb-4", individuals[2]).should("contain", "7");
-  });
-
-  it("should calculate the correct number of household points with maximum individual points", () => {
-    for (let i = 0; i < 6; i++) {
-      cy.get(`input[id=${textInputs[0][i]}]`).clear().type(5); // total = 30
-      cy.get(`input[id=${textInputs[1][i]}]`).clear().type(5); // total = 30
-      cy.get(`input[id=${textInputs[2][i]}]`).clear().type(5); // total = 30
-      // therefore total household points should be 90
-    }
-    cy.get('input[type="submit"]').click();
-    cy.url().should("eq", calculateSite);
-    cy.contains("Total Household points: 90");
-    cy.contains(".mb-4", individuals[0]).should("contain", "30");
-    cy.contains(".mb-4", individuals[1]).should("contain", "30");
-    cy.contains(".mb-4", individuals[2]).should("contain", "30");
-  });
-});
+}
