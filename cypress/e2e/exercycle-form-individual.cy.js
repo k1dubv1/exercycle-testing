@@ -10,7 +10,7 @@ describe("General tests", () => {
     cy.visit(formSites[0]);
   });
 
-  it("should redirect to the calculate page when submit button is clicked", () => {
+  it("Should redirect to the calculate page when submit button is clicked", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
     // Should also display 0 household points as nothing was entered
@@ -29,7 +29,7 @@ describe("Calculation tests", () => {
     cy.visit(formSites[0]);
   });
 
-  it("should display the same number when one daily value is inputted", () => {
+  it("Should display the same number when one daily value is inputted", () => {
     cy.get(`input[id=${singleInput[0]}]`).clear().type("1");
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
@@ -37,9 +37,8 @@ describe("Calculation tests", () => {
     cy.contains(".mb-4", individuals[0]).should("contain", "1");
   });
 
-  it("should display the same number when multiple values are inputted", () => {
+  it("Should display correct calculation when multiple valid values are inputted", () => {
     for (let i = 0; i < singleInput.length; i++) {
-      // forEach not used here for variablilty in input values
       cy.get(`input[id=${singleInput[i]}]`)
         .clear()
         .type(i + 1);
@@ -56,7 +55,7 @@ describe("Calculation tests", () => {
    *  The individual should be able to earn all of these points (as per the daily limit).
    *  However, only 30 points shall be awarded per week per individual, excess points will not contribute to the household total.
    */
-  it("should not have more than 30 weekly points when total daily points > 30", () => {
+  it("Should not have more than 30 weekly points when total daily points > 30", () => {
     singleInput.forEach((i) => {
       cy.get(`input[id=${i}]`).clear().type("7");
     });
@@ -66,7 +65,7 @@ describe("Calculation tests", () => {
     cy.contains(".mb-4", individuals[0]).should("contain", "30");
   });
 
-  it("should calculate correctly when there are empty fields", () => {
+  it("Should calculate correctly when there are empty fields", () => {
     singleInput.forEach((i) => {
       cy.get(`input[id=${i}]`).clear().type(4);
     });

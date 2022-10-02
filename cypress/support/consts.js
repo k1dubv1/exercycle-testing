@@ -64,6 +64,4 @@ const formSites = [
 
 const calculateSite = "https://cycle.dia-sandbox.govt.nz/calculate";
 
-const toForm = ["1", "2", "3", "4", "5"];
-
-export { individuals, textInputs, toForm, formSites, calculateSite };
+export { individuals, textInputs, formSites, calculateSite };
