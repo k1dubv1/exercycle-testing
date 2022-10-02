@@ -7,7 +7,7 @@ import {
 const singleInput = textInputs[0];
 const largeNegative = "-999999999999999999999"; // In string format as number is too big for int
 const largeNegativeScientific = "-1.0E+21";
-const manyLeadingZeros = "000000000000000000000000000000000000000001";
+const manyLeadingZeros = "000000000000000000000000000000000000000001"; // In string format as leading 0s will be removed as a number
 
 /*
  *  These tests check that the app allows/does not allow different types of input.
@@ -117,7 +117,7 @@ describe("Multiple member input tests", () => {
     cy.contains(".mb-4", individuals[1]).should("contain", "21");
   });
 
-  it("should calculate correctly and show correct table when one individual has leading 0s", () => {
+  it("Should calculate correctly and show correct table when one individual has leading 0s", () => {
     for (let i = 0; i < textInputs[0].length; i++) {
       cy.get(`input[id=${textInputs[0][i]}]`).clear().type(i); // Total = 21
       cy.get(`input[id=${textInputs[1][i]}]`).clear().type("000000000001"); // Total = 7
