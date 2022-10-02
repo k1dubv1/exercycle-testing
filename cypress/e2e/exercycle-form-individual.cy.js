@@ -1,4 +1,9 @@
-import { textInputs, formSites, calculateSite } from "../support/consts";
+import {
+  individuals,
+  textInputs,
+  formSites,
+  calculateSite,
+} from "../support/consts";
 const singleInput = textInputs[0];
 describe("General tests", () => {
   beforeEach(() => {
@@ -29,6 +34,7 @@ describe("Calculation tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
     cy.contains("Total Household points: 1");
+    cy.contains(".mb-4", individuals[0]).should("contain", "1");
   });
 
   it("should display the same number when multiple values are inputted", () => {
@@ -41,6 +47,7 @@ describe("Calculation tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
     cy.contains("Total Household points: 28");
+    cy.contains(".mb-4", individuals[0]).should("contain", "28");
   });
 
   /*
@@ -56,6 +63,7 @@ describe("Calculation tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
     cy.contains("Total Household points: 30");
+    cy.contains(".mb-4", individuals[0]).should("contain", "30");
   });
 
   it("should calculate correctly when there are empty fields", () => {
@@ -67,5 +75,6 @@ describe("Calculation tests", () => {
     cy.get('input[type="submit"]').click();
     cy.url().should("eq", calculateSite);
     cy.contains("Total Household points: 20");
+    cy.contains(".mb-4", individuals[0]).should("contain", "20");
   });
 });
