@@ -1,0 +1,89 @@
+Key:
+x = complete
+- = Todo
+/ = Removed/Changed
+N = Not to implement
+*r = to research (somewhat in depth research)
+
+
+General tests
+
+/ has buttons -> integrated into redirect
+x buttons in home page redirect to form pages
+x buttons in form pages redirect to calculation page
+
+
+Various inputs to check
+
+x individual per day >7
+N clicking up and down inside table -> unable to access arrow buttons?
+/ arrow keys
+/ enter button
+x negative
+x decimals
+N whole numbers -> redundant with decimals
+x scientific format
+N negative scientific -> redundant as negative is not valid
+x leading 0s
+x empty input
+x large negative
+x lots of leading 0s
+
+
+Calculations - check table + message
+
+x single input updated
+x multiple values inputted
+x > 30 points per individual
+x contains empty fields
+
+  Boundary tests
+  x 0
+  x <30
+  x >30
+  x =30
+  x <<30
+
+
+GENERAL TODO
+x implement a before method that visits the page before each test *r
+x constant formatting -> Prettier
+x implement constants = improved code clarity/readability *r
+x iterate tests = shorter code files -> improved clarity/readability *r
+/ separate files for individual, multiple? -> separate for input as well
+x split tests into each type -> general, input, calculation
+x constants file -> reduce lines at start of file, many test files access the same constants *r
+/ links to site forms -> not needed, hyperlinks make README messy
+x move site links to constants
+x research Cypress "disabled" element fail *r
+x change constants so that they fall under the same constant -> avoid exporting/importing multiple constants
+x add comments before each set of tests (before describe)
+x iterate multiple member tests -> they test the same calculations (boundary)
+x change for loops to forEach -> nested loops hard to read, improve general readability *r
+x research how to do arrow key inputs/click form arrows *r
+x write report
+
+
+(ignore key)
+Notes
+**SET REPO PUBLIC FOR VISIBILITY
+- button 5+ only allows 5 people -> suggestion = implement instructions for what to do for other members
+- household != individual points in calculation page
+- household incorrect when sum of individual points > 100 -> stops at 100
+- can use arrow keys inside form
+- enter key proceeds to calculate page from any part of the form, only when clicked inside form -> intended? -> maybe test for next page
+- arrow keys/clicking up and down can go past 7, below 0
+- negative numbers are valid inputs
+- scientific numbers as an answer shown
+- scientific numbers can be inputted
+- scientific numbers can inputted up to -1.0E+309
+- scientific numbers larger than -1.0E+309 and decimals have a popup when "Work it out!" pressed
+- tip for negative decimals show incorrect valid numbers
+- blank input allowed
+
+- Cypress tests fail randomly, element "disabled" *r
+  - don't touch, fixes will allow incorrect access of elements to pass.
+  - ignore
+
+
+
